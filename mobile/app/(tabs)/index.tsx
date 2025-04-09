@@ -14,9 +14,11 @@ import {
   Animated,
   ActivityIndicator,
   useColorScheme,
+  KeyboardAvoidingView, // Import KeyboardAvoidingView
 } from 'react-native';
 import { Audio } from 'expo-av';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { Platform } from 'react-native';
 
 const avisos = [
   "Este app não substitui a oração. Use-o como uma ferramenta de reflexão.",
@@ -102,64 +104,78 @@ export default function App() {
   const darkMode = theme === 'dark';
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={[styles.container, darkMode && styles.containerDark]}>
-        <Image source={require('../../assets/images/cruz.png')} style={styles.logo} />
-        <Text style={[styles.title, darkMode && styles.textDark]}>Voz do Altíssimo</Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500} // Ajuste este valor conforme necessário
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView style={[styles.container, darkMode && styles.containerDark]}>
+          <ScrollView
+            contentContainerStyle={[styles.scrollViewContent, { minHeight: screenHeight }]}
+            keyboardShouldPersistTaps="handled"
+          >
+            <Image source={require('../../assets/images/biblia.jpg')} style={styles.logo} />
+            <Text style={[styles.title, darkMode && styles.textDark]}>Voz do Altíssimo</Text>
 
-        <TouchableOpacity style={styles.somBotao} onPress={toggleMusica}>
-          <MaterialIcons name={musicaTocando ? 'volume-off' : 'volume-up'} size={24} color="#333" />
-          <Text style={styles.somTexto}>{musicaTocando ? 'Parar Música' : 'Tocar Música'}</Text>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.somBotao} onPress={toggleMusica}>
+              <MaterialIcons name={musicaTocando ? 'volume-off' : 'volume-up'} size={24} color="#333" />
+              <Text style={styles.somTexto}>{musicaTocando ? 'Parar Música' : 'Tocar Música'}</Text>
+            </TouchableOpacity>
 
-        <TextInput
-          placeholder="Digite sua pergunta..."
-          placeholderTextColor={darkMode ? '#AAA' : '#666'}
-          value={mensagem}
-          onChangeText={setMensagem}
-          style={[styles.input, darkMode && styles.inputDark]}
-          multiline
-        />
+            <TextInput
+              placeholder="Digite sua pergunta..."
+              placeholderTextColor={darkMode ? '#AAA' : '#666'}
+              value={mensagem}
+              onChangeText={setMensagem}
+              style={[styles.input, darkMode && styles.inputDark]}
+              multiline
+            />
 
-        <TouchableOpacity style={styles.button} onPress={perguntar} disabled={carregando}>
-          <Text style={styles.buttonText}>Perguntar a Deus</Text>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={perguntar} disabled={carregando}>
+              <Text style={styles.buttonText}>Perguntar a Deus</Text>
+            </TouchableOpacity>
 
-        <ScrollView style={styles.respostaScroll} contentContainerStyle={styles.respostaBox}>
-          {carregando ? (
-            <View style={styles.loadingBox}>
-              <Text style={[styles.carregandoTexto, darkMode && styles.textDark]}>
-                Deus está refletindo...
-              </Text>
-              <ActivityIndicator size="large" color="#6C63FF" />
+            <View style={styles.respostaScroll}>
+              {carregando ? (
+                <View style={styles.loadingBox}>
+                  <Text style={[styles.carregandoTexto, darkMode && styles.textDark]}>
+                    Deus está refletindo...
+                  </Text>
+                  <ActivityIndicator size="large" color="#6C63FF" />
+                </View>
+              ) : (
+                <View style={styles.respostaBox}>
+                  <Animated.Text style={[styles.resposta, { opacity: fadeAnim }, darkMode && styles.textDark]}>
+                    {resposta}
+                  </Animated.Text>
+                  <Text style={[styles.aviso, darkMode && styles.textDark]}>{aviso}</Text>
+                </View>
+              )}
             </View>
-          ) : (
-            <>
-              <Animated.Text style={[styles.resposta, { opacity: fadeAnim }, darkMode && styles.textDark]}>
-                {resposta}
-              </Animated.Text>
-              <Text style={[styles.aviso, darkMode && styles.textDark]}>{aviso}</Text>
-            </>
-          )}
-        </ScrollView>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+          </ScrollView>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     padding: 24,
     backgroundColor: '#F8F8F8',
   },
   containerDark: {
     backgroundColor: '#121212',
   },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'center', // Centraliza o conteúdo verticalmente inicialmente
+  },
   logo: {
-    width: 80,
-    height: 80,
+    width: 400, // Reduzi o tamanho do logo
+    height: 290, // Reduzi o tamanho do logo
     alignSelf: 'center',
     marginBottom: 12,
   },
@@ -197,7 +213,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   respostaScroll: {
-    maxHeight: screenHeight * 0.4,
     marginBottom: 20,
   },
   respostaBox: {

@@ -14,7 +14,7 @@ export default function TabTwoScreen() {
   headerBackgroundColor={{ light: '#D0EFFF', dark: '#1C1C1C' }}
   headerImage={
     <Image
-      source={require('@/assets/images/ceu.png')}
+      source={require('@/assets/images/ceu.jpg')}
       style={styles.headerImage}
       resizeMode="cover"
     />
@@ -45,13 +45,13 @@ export default function TabTwoScreen() {
           Conecte-se com o divino, faça suas perguntas e receba respostas inspiradoras. A fé pode se manifestar de formas surpreendentes.
         </ThemedText>
         <Image
-          source={require('../../assets/images/cruz2.png')} 
+          source={require('../../assets/images/cruz.jpg')} 
           style={{ alignSelf: 'center', width: 200, height: 200 }} />
           
       </Collapsible>
 
       <Collapsible title="Mais sobre o projeto">
-        <ExternalLink href="https://seusite.com">
+        <ExternalLink href="https://github.com/wilk2308/voz_do_altissimo_mobile_frontend">
           <ThemedText type="link">Saiba mais</ThemedText>
         </ExternalLink>
       </Collapsible>
@@ -61,6 +61,8 @@ export default function TabTwoScreen() {
 
 const styles = StyleSheet.create({
   headerImage: {
+    width: 500, // Reduzi o tamanho do logo
+    height: 500,
     color: '#808080',
     bottom: -90,
     left: -35,
