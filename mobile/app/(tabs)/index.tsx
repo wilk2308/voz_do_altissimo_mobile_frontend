@@ -78,7 +78,7 @@ export default function App() {
     setAviso('');
 
     try {
-      const res = await fetch('http://192.168.0.22:5000/api/perguntar', {
+      const res = await fetch('https://7b05-191-176-120-154.ngrok-free.app/api/perguntar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mensagem }),
