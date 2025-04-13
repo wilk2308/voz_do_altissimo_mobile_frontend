@@ -78,7 +78,7 @@ export default function App() {
     setAviso('');
 
     try {
-      const res = await fetch('https://7b05-191-176-120-154.ngrok-free.app/api/perguntar', {
+      const res = await fetch('https://voz-do-altissimo-mobile-backend-2.onrender.com/api/perguntar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mensagem }),
